@@ -1,7 +1,16 @@
-# This code assumes that each image file in the directory contains only
-# a single color to be processed and converted into a hex code
-import os
-from PIL import Image
+''' 
+FOR PYTHON 2.7
+PREREQUISITES FOR getHexCodes.py
+Pillow must be installed on machine - $ sudo pip install Pillow
+'''
+
+'''
+This code assumes that each image file in the directory contains only
+a single color to be processed and converted into a hex code
+'''
+
+import os   # Needs os module to get filenames from image directory
+from PIL import Image   # Pillow module for for analyzing images
 
 # Keeps values within the correct range for rgb to hex code coversion
 def clamp(x):
@@ -9,7 +18,15 @@ def clamp(x):
 
 # Creates new txt file to store the file names and hex codes
 outputFileName = raw_input("Enter name for hex code output file: ")
-testingFile = open(outputFileName, "w")
+
+# Sets mode to either append or write depending on if the output file already exists
+if os.path.exists(outputFileName):
+    append_write = "a" # This will append if the file already exists
+else:
+    append_write = "w" # This will create a new file if outputFileName doesn't exist
+
+# Opens the output file with the specified write mode
+testingFile = open(outputFileName, append_write)
 
 # Gets the directory path from user
 imageDirectory = raw_input("Enter path to image directroy, or drag and drop: ")
@@ -21,11 +38,10 @@ if imageDirectory.endswith(" "):
 # Adds the final / to the directory path
 imageDirectory = imageDirectory + "/"
 
-# Opens each image in directory, saves separate r,g,b values, then converts
-# those values into the correct hexadecimal color code
+# Opens each image in directory, saves separate r,g,b values,
+# then converts values into the correct hexadecimal color code
 for filename in os.listdir(imageDirectory):
-
-    # This keeps the code from trying to parse a .DS_Store file
+    # This keeps the code from trying to parse a .DS_Store file or any other hidden file on osX
     if not filename.startswith("."):
         im = Image.open(imageDirectory + filename)
         imOpen = im.load()
